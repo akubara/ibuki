@@ -55,7 +55,7 @@ gulp.task('sass', () =>
     .src([`${paths.src.scss}/**/*.scss`])
     .pipe(plumber())
     .pipe(gulpif(options.sourceMaps, sourcemaps.init()))
-    .pipe(sass())
+    .pipe(sass({outputStyle: 'expanded'}))
     .pipe(autoprefixer())
     .pipe(
       gulpif(
