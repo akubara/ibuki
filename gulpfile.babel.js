@@ -15,9 +15,11 @@ import mozjpeg from 'imagemin-mozjpeg';
 import pngquant from 'imagemin-pngquant';
 import svgo from 'imagemin-svgo';
 import sourcemaps from 'gulp-sourcemaps';
+import webp from 'gulp-webp';
 
 const options = {
   losslessImages: false,
+  webp: false,
   sourceMaps: false,
   minifyCss: false,
   minifyJs: false,
@@ -55,7 +57,7 @@ gulp.task('sass', () =>
     .src([`${paths.src.scss}/**/*.scss`])
     .pipe(plumber())
     .pipe(gulpif(options.sourceMaps, sourcemaps.init()))
-    .pipe(sass({outputStyle: 'expanded'}))
+    .pipe(sass({ outputStyle: 'expanded' }))
     .pipe(autoprefixer())
     .pipe(
       gulpif(
@@ -115,6 +117,14 @@ gulp.task('imagemin', () =>
     .pipe(gulp.dest(paths.build.img)),
 );
 
+gulp.task('webp', () =>
+  gulp
+    .src('src/img/**/*.{png,jpg}')
+    .pipe(plumber())
+    .pipe(webp({ quality: 90 }))
+    .pipe(gulp.dest(paths.build.img)),
+);
+
 // service
 gulp.task('clean', () => del('build/*'));
 
@@ -135,7 +145,10 @@ gulp.task('serve', () => {
 });
 
 // modes
-gulp.task('build', gulp.series('clean', 'pug', 'sass', 'javascript', 'imagemin'));
+gulp.task(
+  'build',
+  gulp.series('clean', 'pug', 'sass', 'javascript', options.webp ? 'webp' : 'imagemin'),
+);
 
 gulp.task('dev', gulp.series('build', gulp.parallel('watch', 'serve')));
 
