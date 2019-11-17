@@ -60,6 +60,7 @@
     "jest": true,
     "alert": true,
     "describe": true,
-    "prompt": true
+    "prompt": true,
+    "fetch": true
   }
 }
